@@ -1,0 +1,1 @@
+{ "name": "claude-usage-line", "owner": { "name": "chriha" }, "plugins": [{ "name": "usage-line", "source": "./" }] }

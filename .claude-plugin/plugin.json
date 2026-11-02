@@ -1,0 +1,1 @@
+{ "name": "usage-line", "version": "0.3.0", "description": "Prompt hint tail: session %, weekly %, left today, next session reset", "types": "./types/index.d.ts" }
