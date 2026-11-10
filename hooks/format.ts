@@ -77,24 +77,28 @@ export function formatReset(iso: string, now: number): string {
 
 const signed = (n: number) => `${n >= 0 ? '+' : ''}${n}%`
 
-export function usageText(u: Usage, now: number): string | undefined {
+// ANSI 256-color foreground per group: blue, green, orange
+const COLOR = { session: 75, fiveHour: 78, week: 208 }
+
+export function usageText(u: Usage, now: number, color = false): string | undefined {
+  const paint = (code: number, s: string) => (color ? `\x1b[38;5;${code}m${s}\x1b[39m` : s)
   const groups: string[] = []
 
   const session: string[] = []
   if (u.tokens !== null) session.push(formatTokens(u.tokens))
   if (u.context !== null) session.push(`ctx ${u.context}%`)
-  if (u.cost !== null) session.push(`$${u.cost.toFixed(2)}`)
-  if (session.length) groups.push(`${ICON.session} ${session.join(' · ')}`)
+  // if (u.cost !== null) session.push(`$${u.cost.toFixed(2)}`)
+  if (session.length) groups.push(paint(COLOR.session, `${ICON.session} ${session.join(' · ')}`))
 
   if (u.fiveHour !== null) {
     const reset = u.fiveHourResetsAt ? ` [${formatReset(u.fiveHourResetsAt, now)}]` : ''
-    groups.push(`${ICON.fiveHour} 5h ${u.fiveHour}%${reset}`)
+    groups.push(paint(COLOR.fiveHour, `${ICON.fiveHour} 5h ${u.fiveHour}%${reset}`))
   }
 
   if (u.week !== null) {
     const budget = u.budget !== null ? ` (${signed(u.budget)})` : ''
     const reset = u.weekResetsAt ? ` [${formatReset(u.weekResetsAt, now)}]` : ''
-    groups.push(`${ICON.week} wk ${u.week}%${budget}${reset}`)
+    groups.push(paint(COLOR.week, `${ICON.week} wk ${u.week}%${budget}${reset}`))
   }
 
   return groups.length ? groups.join('  ·  ') : undefined

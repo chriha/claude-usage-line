@@ -16,7 +16,8 @@ async function publish($: EngineInterface) {
     now,
   )
   const line = usageText(usage, now) ?? null
-  await update($, text, () => line)
+  // colored for the in-app hint; the json file keeps plain text
+  await update($, text, () => usageText(usage, now, true) ?? null)
   const dir = (await $.env.get('CLAUDE_CONFIG_DIR')) || `${await $.env.get('HOME')}/.claude`
   await $.fs.write(`${dir}/usage-line.json`, JSON.stringify({ text: line, ...usage, at: Math.floor(now / 1000) }))
 }

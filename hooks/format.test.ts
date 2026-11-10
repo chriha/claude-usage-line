@@ -10,7 +10,8 @@ const input = { tokens: 24_500, context: 37.6, cost: 1.836, limits }
 
 test('groups session, 5h and week', () => {
   const out = formatUsage(input, now)!
-  expect(out).toContain(`${ICON.session} 24.5k · ctx 38% · $1.84`)
+  // cost hidden for now: `${ICON.session} 24.5k · ctx 38% · $1.84`
+  expect(out).toContain(`${ICON.session} 24.5k · ctx 38%`)
   expect(out).toContain(`${ICON.fiveHour} 5h 24% [`)
   // week started 10-07 12:00 → 120h × 100/168 = 71.4 → minus 30 used = +41
   expect(out).toContain(`${ICON.week} wk 30% (+41%) [`)
